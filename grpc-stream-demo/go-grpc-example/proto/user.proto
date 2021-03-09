@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+
+message UserInfo {
+  int32 user_id = 1;
+  int32 user_score = 2;
+}
+
+message StreamUserRequest {
+  repeated UserInfo users = 1;
+}
+
+message StreamUserResponse {
+  repeated UserInfo users = 1;
+}
+
+service StreamGetUsersService {
+  // 普通模式
+  rpc GetUserScore(StreamUserRequest) returns (StreamUserResponse) {};
+  // 返回值中使用 stream, 表示是服务端流模式
+  rpc GetUsersScoreByServer(StreamUserRequest) returns (stream StreamUserResponse) {};
+  // 请求参数中使用 stream, 表示是客户端流模式
+  rpc GetUserScoreByClientStream(stream StreamUserRequest) returns (StreamUserResponse) {};
+  // 请求参数和返回值中都使用 stream, 表示是双向流
+  rpc GetUserScoreByTWF(stream StreamUserRequest) returns (stream StreamUserResponse) {};
+}
